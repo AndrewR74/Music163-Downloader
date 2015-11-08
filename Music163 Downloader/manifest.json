@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+
+  "name": "Music 163 Downloader",
+  "description": "Download music from Music 163. Bypass copyrighted and location locked songs.",
+  "version": "1.1",
+  "permissions": [
+    "http://music.163.com/*", "background", "http://m1.music.126.net/*", "downloads"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["http://music.163.com/*"],
+      "js": [ "TcdQuery.min.js", "m163d.js"]
+    }
+  ],
+  "background": {
+    "scripts": ["TcdQuery.min.js", "background.js"]
+  },
+  "web_accessible_resources": [ "Inject.js" ],
+  "externally_connectable": {
+	  "matches": ["http://music.163.com/*"]
+	}
+}
