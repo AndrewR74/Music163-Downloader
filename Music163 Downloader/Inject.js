@@ -1,6 +1,23 @@
-window.GetSongDetails = function(sid, callback) {
-	var token = window.NEJ.P("nej.j").fN("__csrf"), songId = sid;
+console.log("M3 Kappa");
 
+window.GetSongDetails = function(sid, callback) {
+
+	var be = NEJ.P
+      , eL = be("nej.g")
+      , bH = be("nej.j")
+      , bm = be("nej.u")
+      , bHd = be("nm.x.ek")
+      , bq = be("nm.x");
+	  
+    var bi = function(qr) {
+        var bn = [];
+        bm.bLt(qr, function(nb) {
+            bn.push(bHd.emj[nb])
+        });
+        return bn.join("")
+    };
+	
+	var token = bH.fN("__csrf"), songId = sid;
 
 	var p1 = JSON.stringify({ csrf_token: token, id: songId, ids: JSON.stringify([songId]) });
 	// CONST
@@ -10,8 +27,9 @@ window.GetSongDetails = function(sid, callback) {
 	// CONST
 	var p4 = "0CoJUm6Qyw8W8jud"; 
 
-	var r1 = window.aesRsaEncrypt(p1, p2, p3, p4);
-
+	//var r1 = window.aesRsaEncrypt(p1, p2, p3, p4);
+	var r1 = window.asrsea(p1, bi(["流泪", "强"]), bi(bHd.md), bi(["爱心", "女孩", "惊恐", "大笑"]));
+	
 	var d1 = { params: r1.encText, encSecKey: r1.encSecKey };
 
 	var xmlhttp;
@@ -62,7 +80,7 @@ function DownloadMP3(url, filename) {
 
 function ChromeAPIConnect(obj) {
 	// The ID of the extension we want to talk to.
-	var editorExtensionId = "kkameipebcbpnpcdaidjcbpoimlngiel";
+	var editorExtensionId = "{CID}";
 
 	// Make a simple request:
 	chrome.runtime.sendMessage(editorExtensionId, obj, function(response) {

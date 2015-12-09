@@ -2,7 +2,7 @@
 	$.get(chrome.extension.getURL("Inject.js"),
 		function (data) {
 			var node = document.createElement("script");
-			node.textContent = data;
+			node.textContent = data.replace("{CID}", chrome.runtime.id);
 			document.body.appendChild(node);
 		}
 	);
