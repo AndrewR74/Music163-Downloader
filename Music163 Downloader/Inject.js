@@ -1,7 +1,7 @@
 console.log("M3 Kappa");
 
 window.GetSongDetails = function(sid, callback) {
-
+	/*
 	var be = NEJ.P
       , eL = be("nej.g")
       , bH = be("nej.j")
@@ -31,6 +31,15 @@ window.GetSongDetails = function(sid, callback) {
 	var r1 = window.asrsea(p1, bi(["流泪", "强"]), bi(bHd.md), bi(["爱心", "女孩", "惊恐", "大笑"]));
 	
 	var d1 = { params: r1.encText, encSecKey: r1.encSecKey };
+	*/
+	
+	var e = "010001";
+	var f = "00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7";
+	var g = "0CoJUm6Qyw8W8jud";
+	var s = JSON.stringify({"ids":"[" + sid + "]","br":128000,"csrf_token":""});
+	var d1 = window.asrsea(s, e, f, g);
+	d1["params"] = d1["encText"];
+	delete d1["encText"];
 
 	var xmlhttp;
 
@@ -61,7 +70,8 @@ window.GetSongDetails = function(sid, callback) {
 		str += key + "=" + encodeURIComponent(d1[key]);
 	}
 
-	xmlhttp.open("POST","http://music.163.com/weapi/song/detail/?csrf_token=" + token, true);
+	//xmlhttp.open("POST","http://music.163.com/weapi/song/detail/?csrf_token=" + token, true);
+	xmlhttp.open("POST","http://music.163.com/weapi/song/enhance/player/url?csrf_token=", true);
 	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	xmlhttp.send(str);
 }
@@ -115,13 +125,11 @@ setInterval(function() {
 				var sid = GetSongId();
 				if(sid.length > 0 && !isNaN(sid)) {
 					window.GetSongDetails(sid, function(songDetails) {
-						if(songDetails != null && typeof(songDetails.songs) !== "undefined") {
-							if(songDetails.songs.length > 0) {
-								var artistName = "";
-								if(songDetails.songs[0].artists.length > 0)
-									artistName = songDetails.songs[0].artists[0].name + " - ";
+						if(songDetails != null && typeof(songDetails.data) !== "undefined") {
+							if(songDetails.data.length > 0) {
+								var filename = document.title.split('-').splice(0,2).join("-").trim();
 								
-								DownloadMP3(songDetails.songs[0].mp3Url, artistName + songDetails.songs[0].name + ".mp3");
+								DownloadMP3(songDetails.data[0].url, filename + ".mp3");
 							} else {
 								console.log("No Song Found");
 							}
