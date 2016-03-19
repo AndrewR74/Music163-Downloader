@@ -1,6 +1,6 @@
 console.log("M3 Kappa");
 
-window.GetSongDetails = function(sid, callback) {
+window.GetSongDetails = function(sid, _bitRate, callback) {
 	/*
 	var be = NEJ.P
       , eL = be("nej.g")
@@ -36,7 +36,7 @@ window.GetSongDetails = function(sid, callback) {
 	var e = "010001";
 	var f = "00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece0462db0a22b8e7";
 	var g = "0CoJUm6Qyw8W8jud";
-	var s = JSON.stringify({"ids":"[" + sid + "]","br":128000,"csrf_token":""});
+	var s = JSON.stringify({"ids":"[" + sid + "]","br":_bitRate,"csrf_token":""});
 	var d1 = window.asrsea(s, e, f, g);
 	d1["params"] = d1["encText"];
 	delete d1["encText"];
@@ -124,19 +124,42 @@ setInterval(function() {
 			btn.onclick = function () {
 				var sid = GetSongId();
 				if(sid.length > 0 && !isNaN(sid)) {
-					window.GetSongDetails(sid, function(songDetails) {
+					var _bitRate = 320000, _callback =  function(songDetails) {
 						if(songDetails != null && typeof(songDetails.data) !== "undefined") {
 							if(songDetails.data.length > 0) {
-								var filename = document.title.split('-').splice(0,2).join("-").trim();
+								var filename = document.title.split('-').splice(0,2).join("-").replace("  ", " ").trim().replace("\\", " ").replace("/", " ").replace("&", " ");
 								
-								DownloadMP3(songDetails.data[0].url, filename + ".mp3");
+								
+								if(songDetails.data[0].url === null && _bitRate === 96000) {
+									console.log("No bit rate found");
+									return;
+								} else if(songDetails.data[0].url === null && _bitRate === 128000)
+									_bitRate = 96000;
+								else if(songDetails.data[0].url === null && _bitRate === 160000)
+									_bitRate = 128000;
+								else if(songDetails.data[0].url === null && _bitRate === 192000)
+									_bitRate = 160000;
+								else if(songDetails.data[0].url === null && _bitRate === 320000)
+									_bitRate = 192000;
+								
+							
+								if(songDetails.data[0].url) {
+									console.log("Downloading: " + filename + " @ " + _bitRate + "kbits/s");
+								
+									DownloadMP3(songDetails.data[0].url, filename + ".mp3");
+								} else { 
+									console.log("Bitrate not supported for " + filename + " @ " + _bitRate + "kbits/s");
+									_callback(songDetails);
+								}
 							} else {
 								console.log("No Song Found");
 							}
 						} else {
 							console.log("Song Details Are Invalid");
 						}
-					});
+					};
+					
+					window.GetSongDetails(sid, _bitRate, _callback);
 				} else {
 					console.log("Invalid Song ID");
 				}
